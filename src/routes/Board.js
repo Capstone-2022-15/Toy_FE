@@ -1,11 +1,11 @@
+import ShowMainPage from "../components/MainPage";
 import Navbar from "../components/Navbar";
-import ShowPage from "../components/showPage";
 
-export default function Board() {
+export default function MainPage() {
   return (
     <div>
-      <Navbar />
-      <ShowPage />
+      <Navbar name={"Computer-Engineering"}/>
+      <ShowMainPage />
     </div>
   );
 }
