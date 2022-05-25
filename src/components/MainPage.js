@@ -1,4 +1,5 @@
 import {
+  Button,
   Grid,
   Table,
   TableBody,
@@ -28,16 +29,19 @@ export default function ShowMainPage() {
   };
 
   const HeadClickHandler = (e) => {
-    const key = e.target.innerHTML;
+    const key = e.target.innerText;
     switch (key) {
       case "공지사항":
         navigate("/announcement");
         break;
       case "학사정보":
+        navigate("/degree");
         break;
       case "장학정보":
+        navigate("/scholarship");
         break;
       case "커뮤니티":
+        navigate("/community");
         break;
 
       default:
@@ -66,17 +70,37 @@ export default function ShowMainPage() {
                 >
                   <TableHead>
                     <TableRow>
-                      <TableCell align="center" onClick={HeadClickHandler}>
-                        공지사항
+                      <TableCell align="center">
+                        <Button
+                          onClick={HeadClickHandler}
+                          sx={{
+                            width: "100%",
+                            fontWeight: "bold",
+                            color: "primary.main",
+                          }}
+                        >
+                          공지사항
+                        </Button>
                       </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {board[0].map((n) => (
-                      <TableRow key={n.idx}>
-                        <TableCell align="center">{n.subject}</TableCell>
-                      </TableRow>
-                    ))}
+                    {board &&
+                      board[0].map((n) => (
+                        <TableRow key={n.idx}>
+                          <TableCell align="center">
+                            <Button
+                              onClick={HeadClickHandler}
+                              sx={{
+                                width: "100%",
+                                color: "text.secondary",
+                              }}
+                            >
+                              {n.subject}
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -89,15 +113,39 @@ export default function ShowMainPage() {
                 >
                   <TableHead>
                     <TableRow>
-                      <TableCell align="center">학사정보</TableCell>
+                      <TableCell align="center">
+                        {" "}
+                        <Button
+                          onClick={HeadClickHandler}
+                          sx={{
+                            width: "100%",
+                            fontWeight: "bold",
+                            color: "primary.main",
+                          }}
+                        >
+                          학사정보
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {board[1].map((n) => (
-                      <TableRow key={n.idx}>
-                        <TableCell align="center">{n.subject}</TableCell>
-                      </TableRow>
-                    ))}
+                    {board &&
+                      board[1].map((n) => (
+                        <TableRow key={n.idx}>
+                          <TableCell align="center">
+                            {" "}
+                            <Button
+                              onClick={HeadClickHandler}
+                              sx={{
+                                width: "100%",
+                                color: "text.secondary",
+                              }}
+                            >
+                              {n.subject}
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -110,15 +158,39 @@ export default function ShowMainPage() {
                 >
                   <TableHead>
                     <TableRow>
-                      <TableCell align="center">장학정보</TableCell>
+                      <TableCell align="center">
+                        {" "}
+                        <Button
+                          onClick={HeadClickHandler}
+                          sx={{
+                            width: "100%",
+                            fontWeight: "bold",
+                            color: "primary.main",
+                          }}
+                        >
+                          장학정보
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {board[2].map((n) => (
-                      <TableRow key={n.idx}>
-                        <TableCell align="center">{n.subject}</TableCell>
-                      </TableRow>
-                    ))}
+                    {board &&
+                      board[2].map((n) => (
+                        <TableRow key={n.idx}>
+                          <TableCell align="center">
+                            {" "}
+                            <Button
+                              onClick={HeadClickHandler}
+                              sx={{
+                                width: "100%",
+                                color: "text.secondary",
+                              }}
+                            >
+                              {n.subject}
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -131,15 +203,37 @@ export default function ShowMainPage() {
                 >
                   <TableHead>
                     <TableRow>
-                      <TableCell align="center">커뮤니티</TableCell>
+                      <TableCell align="center">
+                        <Button
+                          onClick={HeadClickHandler}
+                          sx={{
+                            width: "100%",
+                            fontWeight: "bold",
+                            color: "primary.main",
+                          }}
+                        >
+                          커뮤니티
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {board[3].map((n) => (
-                      <TableRow key={n.idx}>
-                        <TableCell align="center">{n.subject}</TableCell>
-                      </TableRow>
-                    ))}
+                    {board &&
+                      board[3].map((n) => (
+                        <TableRow key={n.idx}>
+                          <TableCell align="center">
+                            <Button
+                              onClick={HeadClickHandler}
+                              sx={{
+                                width: "100%",
+                                color: "text.secondary",
+                              }}
+                            >
+                              {n.subject}
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
                   </TableBody>
                 </Table>
               </TableContainer>

@@ -13,7 +13,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export const ShowAnnounPage = () => {
+export const ShowCommunityPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [board, setBoard] = useState([]);
   const [page, setPage] = React.useState(1);
@@ -25,7 +25,7 @@ export const ShowAnnounPage = () => {
     try {
       const json = await axios({
         method: "GET",
-        url: "http://localhost:3030/api/announcement",
+        url: "http://localhost:3030/api/community",
         headers: {
           Authorization: window.localStorage.getItem("accessToken"),
         },
@@ -34,7 +34,7 @@ export const ShowAnnounPage = () => {
           window.localStorage.setItem("accessToken", res.data.token);
           axios({
             method: "GET",
-            url: "http://localhost:3030/api/announcement",
+            url: "http://localhost:3030/api/community",
             headers: {
               Authorization: window.localStorage.getItem("accessToken"),
             },
@@ -127,4 +127,4 @@ export const ShowAnnounPage = () => {
     </div>
   );
 };
-export default ShowAnnounPage;
+export default ShowCommunityPage;
