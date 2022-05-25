@@ -21,13 +21,17 @@ export default function ButtonAppBar(prop) {
       const sure = window.confirm("로그아웃 하시겠습니까?");
       if (sure) {
         await axios({
-          method: "GET",
+          method: "POST",
           url: "http://localhost:3030/api/signout",
           headers: {
             Authorization: window.localStorage.getItem("accessToken"),
           },
         }).then((res) => {
-          window.localStorage.removeItem("accessToken");
+          try {
+            window.localStorage.removeItem("accessToken");
+          } catch (error) {
+            alert(error);
+          }
           navigate("/login");
         });
       }
@@ -52,7 +56,9 @@ export default function ButtonAppBar(prop) {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             {prop.name}
           </Typography>
-          <Button color="inherit" onClick={OnClickLogout}>{isLogin}</Button>
+          <Button color="inherit" onClick={OnClickLogout}>
+            {isLogin}
+          </Button>
         </Toolbar>
       </AppBar>
     </Box>

@@ -4,7 +4,7 @@ import ShowCommunityPage from "../components/ShowC";
 export default function CommunityPage() {
   return (
     <div>
-      <Navbar name={"Computer-Engineering"}/>
+      <Navbar name={"커뮤니티"}/>
       <ShowCommunityPage />
     </div>
   );
