@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import AdetailPage from "./routes/Adetail";
 import AnnouncePage from "./routes/Announcement";
 import MainPage from "./routes/Board";
 import CommunityPage from "./routes/Community";
@@ -17,6 +18,7 @@ function App() {
           <Route path="/degree" element={<DegreePage />} />
           <Route path="/scholarship" element={<ScholarPage />} />
           <Route path="/community" element={<CommunityPage />} />
+          <Route path="/announcement/:id" element={<AdetailPage />} />
         </Routes>
       </BrowserRouter>
     </div>

@@ -1,4 +1,5 @@
 import {
+  Button,
   Pagination,
   Stack,
   Table,
@@ -13,7 +14,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export const ShowDegreePage = () => {
+const ShowDegreePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [board, setBoard] = useState([]);
   const [page, setPage] = React.useState(1);
@@ -92,7 +93,14 @@ export const ShowDegreePage = () => {
                             {index + 1}
                           </TableCell>
                           <TableCell sx={{ textAlign: "center" }}>
-                            {n.subject}
+                            <Button
+                              sx={{
+                                width: "100%",
+                                color: "text.secondary",
+                              }}
+                            >
+                              {n.subject}
+                            </Button>
                           </TableCell>
                           <TableCell sx={{ textAlign: "center" }}>
                             {n.writer}
