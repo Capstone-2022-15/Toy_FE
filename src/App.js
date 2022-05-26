@@ -14,11 +14,11 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<MainPage />} />
-          <Route path="/announcement" element={<AnnouncePage />} />
-          <Route path="/degree" element={<DegreePage />} />
-          <Route path="/scholarship" element={<ScholarPage />} />
-          <Route path="/community" element={<CommunityPage />} />
-          <Route path="/announcement/:id" element={<AdetailPage />} />
+          <Route path="/1" element={<AnnouncePage />} />
+          <Route path="/2" element={<DegreePage />} />
+          <Route path="/3" element={<ScholarPage />} />
+          <Route path="/4" element={<CommunityPage />} />
+          <Route path="/1/:id" element={<AdetailPage />} />
         </Routes>
       </BrowserRouter>
     </div>

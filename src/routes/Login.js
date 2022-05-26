@@ -26,6 +26,7 @@ export default function Login() {
           return;
         } else {
           window.localStorage.setItem("accessToken", res.data.token);
+          window.localStorage.setItem("userName", res.data.name);
         }
       })
       .then(() => {

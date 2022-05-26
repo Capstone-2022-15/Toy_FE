@@ -1,4 +1,5 @@
 import Navbar from "../components/Navbar";
+import AddBtn from "../components/PostBtn";
 import ShowDegreePage from "../components/ShowD";
 
 export default function DegreePage() {
@@ -6,6 +7,7 @@ export default function DegreePage() {
     <div>
       <Navbar name={"학사정보"} />
       <ShowDegreePage />
+      <AddBtn />
     </div>
   );
 }

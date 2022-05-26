@@ -29,6 +29,7 @@ export default function ButtonAppBar(prop) {
         }).then((res) => {
           try {
             window.localStorage.removeItem("accessToken");
+            window.localStorage.removeItem("userName");
           } catch (error) {
             alert(error);
           }

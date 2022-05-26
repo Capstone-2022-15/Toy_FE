@@ -22,6 +22,9 @@ const ShowAnnounPage = () => {
   const handleChange = (event, value) => {
     setPage(value);
   };
+  const handleClick = (e) => {
+    navigate(`/1/${e.target.name}`);
+  };
   const getBoard = async () => {
     try {
       const json = await axios({
@@ -98,6 +101,8 @@ const ShowAnnounPage = () => {
                                 width: "100%",
                                 color: "text.secondary",
                               }}
+                              onClick={handleClick}
+                              name={n.idx}
                             >
                               {n.subject}
                             </Button>

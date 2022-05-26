@@ -30,23 +30,10 @@ export default function ShowMainPage() {
   };
 
   const HeadClickHandler = (e) => {
-    const key = e.target.innerText;
-    switch (key) {
-      case "공지사항":
-        navigate("/announcement");
-        break;
-      case "학사정보":
-        navigate("/degree");
-        break;
-      case "장학정보":
-        navigate("/scholarship");
-        break;
-      case "커뮤니티":
-        navigate("/community");
-        break;
-
-      default:
-        break;
+    if (e.target.name) {
+      navigate(`/${e.target.id}/${e.target.name}`);
+    } else {
+      navigate(`${e.target.id}`);
     }
   };
   useEffect(() => {
@@ -79,6 +66,7 @@ export default function ShowMainPage() {
                             fontWeight: "bold",
                             color: "primary.main",
                           }}
+                          id={1}
                         >
                           공지사항
                         </Button>
@@ -96,6 +84,8 @@ export default function ShowMainPage() {
                                 width: "100%",
                                 color: "text.secondary",
                               }}
+                              id={n.config_idx}
+                              name={n.idx}
                             >
                               {n.subject}
                             </Button>
@@ -123,6 +113,7 @@ export default function ShowMainPage() {
                             fontWeight: "bold",
                             color: "primary.main",
                           }}
+                          id={2}
                         >
                           학사정보
                         </Button>
@@ -141,6 +132,8 @@ export default function ShowMainPage() {
                                 width: "100%",
                                 color: "text.secondary",
                               }}
+                              id={n.config_idx}
+                              name={n.idx}
                             >
                               {n.subject}
                             </Button>
@@ -168,6 +161,7 @@ export default function ShowMainPage() {
                             fontWeight: "bold",
                             color: "primary.main",
                           }}
+                          id={3}
                         >
                           장학정보
                         </Button>
@@ -186,6 +180,8 @@ export default function ShowMainPage() {
                                 width: "100%",
                                 color: "text.secondary",
                               }}
+                              id={n.config_idx}
+                              name={n.idx}
                             >
                               {n.subject}
                             </Button>
@@ -212,6 +208,7 @@ export default function ShowMainPage() {
                             fontWeight: "bold",
                             color: "primary.main",
                           }}
+                          id={4}
                         >
                           커뮤니티
                         </Button>
@@ -229,6 +226,8 @@ export default function ShowMainPage() {
                                 width: "100%",
                                 color: "text.secondary",
                               }}
+                              id={n.config_idx}
+                              name={n.idx}
                             >
                               {n.subject}
                             </Button>
