@@ -113,6 +113,12 @@ const ShowDetail = ({ id, category }) => {
       deleteComment(idx);
     }
   };
+  //이미지 클릭
+  const handleClickImage = (e) => {
+    navigate(`/${category}/${id}/image/`, {
+      state: e.target.currentSrc
+    });
+  };
   //댓글 삭제
   const deleteComment = async (idx) => {
     try {
@@ -258,19 +264,11 @@ const ShowDetail = ({ id, category }) => {
             </Box>
           </Grid>
           <Grid item xs={12} sx={{ p: 2, bgcolor: "text.main" }}>
-            <ImageList cols={5} rowHeight={300}>
+            <ImageList cols={5} rowHeight={400}>
               {images &&
                 images.map((n) => (
                   <ImageListItem key={n.idx}>
-                    <Button
-                      sx={{ p: 0, m: 0 }}
-                      onClick={() =>
-                        window.open(
-                          `http://localhost:3030/api/${category}/${id}/image/${n.saveName}`,
-                          `_blank`
-                        )
-                      }
-                    >
+                    <Button sx={{ p: 0, m: 0 }} onClick={handleClickImage}>
                       <img
                         src={`http://localhost:3030/api/${category}/${id}/image/${n.saveName}?w=164&h=164&fit=crop&auto=format`}
                         srcSet={`http://localhost:3030/api/${category}/${id}/image/${n.saveName}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
@@ -324,14 +322,22 @@ const ShowDetail = ({ id, category }) => {
                             {n.content}
                           </Typography>
                           - {n.updateDate.substr(0, 10)}
-                          <Button
-                            sx={{ p: 0, m: 0 }}
-                            onClick={handleClickDelete}
-                            id={n.idx}
-                          >
-                            삭제
-                          </Button>
-                          <Divider />
+                          {n.member_id ===
+                          window.localStorage.getItem("userName") ? (
+                            <Button sx={{ p: 0, m: 0 }} id={n.idx}>
+                              수정
+                            </Button>
+                          ) : null}
+                          {n.member_id ===
+                          window.localStorage.getItem("userName") ? (
+                            <Button
+                              sx={{ p: 0, m: 0 }}
+                              onClick={handleClickDelete}
+                              id={n.idx}
+                            >
+                              삭제
+                            </Button>
+                          ) : null}
                         </React.Fragment>
                       }
                     />
