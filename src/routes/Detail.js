@@ -1,11 +1,9 @@
 import { useParams } from "react-router-dom";
+import ShowDetail from "../components/Datail";
 import Navbar from "../components/Navbar";
-import AddBtn from "../components/PostBtn";
-import ShowPage from "../components/Show";
 
-
-export default function BoardPage() {
-  const { category } = useParams();
+export default function DetailPage() {
+  const { category, id } = useParams();
   let categoryName = "";
   let categoryNav = "";
   switch (category) {
@@ -31,8 +29,7 @@ export default function BoardPage() {
   return (
     <div>
       <Navbar name={categoryNav} />
-      <ShowPage category={categoryName} />
-      <AddBtn />
+      <ShowDetail id={id} category={categoryName} />
     </div>
   );
 }

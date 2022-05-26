@@ -12,9 +12,10 @@ import {
 import { Box, Container } from "@mui/system";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-const ShowScholarPage = () => {
+const ShowPage = ({ category }) => {
+  const URL = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [board, setBoard] = useState([]);
   const [page, setPage] = React.useState(1);
@@ -22,11 +23,14 @@ const ShowScholarPage = () => {
   const handleChange = (event, value) => {
     setPage(value);
   };
+  const handleClick = (e) => {
+    navigate(`/${URL.category}/${e.target.name}`);
+  };
   const getBoard = async () => {
     try {
       const json = await axios({
         method: "GET",
-        url: "http://localhost:3030/api/scholarship",
+        url: `http://localhost:3030/api/${category}`,
         headers: {
           Authorization: window.localStorage.getItem("accessToken"),
         },
@@ -35,7 +39,7 @@ const ShowScholarPage = () => {
           window.localStorage.setItem("accessToken", res.data.token);
           axios({
             method: "GET",
-            url: "http://localhost:3030/api/scholarship",
+            url: `http://localhost:3030/api/${category}`,
             headers: {
               Authorization: window.localStorage.getItem("accessToken"),
             },
@@ -98,6 +102,8 @@ const ShowScholarPage = () => {
                                 width: "100%",
                                 color: "text.secondary",
                               }}
+                              onClick={handleClick}
+                              name={n.idx}
                             >
                               {n.subject}
                             </Button>
@@ -135,4 +141,4 @@ const ShowScholarPage = () => {
     </div>
   );
 };
-export default ShowScholarPage;
+export default ShowPage;

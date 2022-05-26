@@ -15,18 +15,19 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const ShowDetailA = ({ id }) => {
+const ShowDetail = ({ id, category }) => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [board, setBoard] = useState([]);
   const [images, setImages] = useState([]);
   const [comments, setCommnets] = useState([]);
   let content = "";
+  // 게시물 불러오기
   const getBoard = async () => {
     try {
       const contentdata = await axios({
         method: "GET",
-        url: `http://localhost:3030/api/announcement/${id}`,
+        url: `http://localhost:3030/api/${category}/${id}`,
         headers: {
           Authorization: window.localStorage.getItem("accessToken"),
         },
@@ -35,7 +36,7 @@ const ShowDetailA = ({ id }) => {
           window.localStorage.setItem("accessToken", res.data.token);
           axios({
             method: "GET",
-            url: `http://localhost:3030/api/announcement/${id}`,
+            url: `http://localhost:3030/api/${category}/${id}`,
             headers: {
               Authorization: window.localStorage.getItem("accessToken"),
             },
@@ -58,11 +59,12 @@ const ShowDetailA = ({ id }) => {
       }
     }
   };
+  //댓글 불러오기
   const getComment = async () => {
     try {
       const commentdata = await axios({
         method: "GET",
-        url: `http://localhost:3030/api/announcement/${id}/comments`,
+        url: `http://localhost:3030/api/${category}/${id}/comments`,
         headers: {
           Authorization: window.localStorage.getItem("accessToken"),
         },
@@ -71,7 +73,7 @@ const ShowDetailA = ({ id }) => {
           window.localStorage.setItem("accessToken", res.data.token);
           axios({
             method: "GET",
-            url: `http://localhost:3030/api/announcement/${id}/comments`,
+            url: `http://localhost:3030/api/${category}/${id}/comments`,
             headers: {
               Authorization: window.localStorage.getItem("accessToken"),
             },
@@ -92,19 +94,66 @@ const ShowDetailA = ({ id }) => {
       }
     }
   };
+  //댓글 작성 버튼
   const handlePostComments = (e) => {
     const name = window.localStorage.getItem("userName");
     const data = { member_id: name, content: content };
     getPostComments(data);
   };
+  //댓글 입력창
   const handleChangeInput = (e) => {
     content = e.target.value;
   };
+  //댓글 삭제 버튼
+  const handleClickDelete = (e) => {
+    const sure = window.confirm("정말로 삭제 하시겠습니까?");
+    if (sure) {
+      const idx = e.target.id;
+      console.log(idx);
+      deleteComment(idx);
+    }
+  };
+  //댓글 삭제
+  const deleteComment = async (idx) => {
+    try {
+      await axios({
+        method: "DELETE",
+        url: `http://localhost:3030/api/${category}/${id}/comments/${idx}`,
+        headers: {
+          Authorization: window.localStorage.getItem("accessToken"),
+        },
+      }).then((res) => {
+        if (res.data.token) {
+          window.localStorage.setItem("accessToken", res.data.token);
+          axios({
+            method: "DELETE",
+            url: `http://localhost:3030/api/${category}/${id}/comments/${idx}`,
+            headers: {
+              Authorization: window.localStorage.getItem("accessToken"),
+            },
+          });
+        }
+        return res.data;
+      });
+      getComment();
+    } catch (error) {
+      if (
+        error.response.data.code === 419 ||
+        error.response.data.code === 401
+      ) {
+        alert("로그인이 필요한 서비스입니다.");
+        navigate("/login");
+      } else {
+        alert("데이터 불러오기 오류!");
+      }
+    }
+  };
+  //댓글 작성
   const getPostComments = async (data) => {
     try {
       await axios({
         method: "POST",
-        url: `http://localhost:3030/api/announcement/${id}/comments`,
+        url: `http://localhost:3030/api/${category}/${id}/comments`,
         headers: {
           Authorization: window.localStorage.getItem("accessToken"),
         },
@@ -114,7 +163,7 @@ const ShowDetailA = ({ id }) => {
           window.localStorage.setItem("accessToken", res.data.token);
           axios({
             method: "POST",
-            url: `http://localhost:3030/api/announcement/${id}/comments`,
+            url: `http://localhost:3030/api/${category}/${id}/comments`,
             headers: {
               Authorization: window.localStorage.getItem("accessToken"),
             },
@@ -215,8 +264,8 @@ const ShowDetailA = ({ id }) => {
                   <ImageListItem key={n.idx}>
                     <Button sx={{ p: 0, m: 0 }}>
                       <img
-                        src={`http://localhost:3030/api/announcement/${id}/image/${n.saveName}?w=164&h=164&fit=crop&auto=format`}
-                        srcSet={`http://localhost:3030/api/announcement/${id}/image/${n.saveName}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                        src={`http://localhost:3030/api/${category}/${id}/image/${n.saveName}?w=164&h=164&fit=crop&auto=format`}
+                        srcSet={`http://localhost:3030/api/${category}/${id}/image/${n.saveName}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
                         alt={n.savaName}
                         loading="lazy"
                       />
@@ -245,7 +294,7 @@ const ShowDetailA = ({ id }) => {
               작성
             </Button>
           </Grid>
-          <Grid item xs={12} sx={{ p: 1, bgcolor: "primary.light" }}>
+          <Grid item xs={12} sx={{ p: 1, bgcolor: "background.paper" }}>
             <List sx={{ width: "100%", bgcolor: "background.paper" }}>
               {comments &&
                 comments.map((n) => (
@@ -267,6 +316,13 @@ const ShowDetailA = ({ id }) => {
                             {n.content}
                           </Typography>
                           - {n.updateDate.substr(0, 10)}
+                          <Button
+                            sx={{ p: 0, m: 0 }}
+                            onClick={handleClickDelete}
+                            id={n.idx}
+                          >
+                            삭제
+                          </Button>
                           <Divider />
                         </React.Fragment>
                       }
@@ -280,4 +336,4 @@ const ShowDetailA = ({ id }) => {
     </div>
   );
 };
-export default ShowDetailA;
+export default ShowDetail;
