@@ -262,7 +262,15 @@ const ShowDetail = ({ id, category }) => {
               {images &&
                 images.map((n) => (
                   <ImageListItem key={n.idx}>
-                    <Button sx={{ p: 0, m: 0 }}>
+                    <Button
+                      sx={{ p: 0, m: 0 }}
+                      onClick={() =>
+                        window.open(
+                          `http://localhost:3030/api/${category}/${id}/image/${n.saveName}`,
+                          `_blank`
+                        )
+                      }
+                    >
                       <img
                         src={`http://localhost:3030/api/${category}/${id}/image/${n.saveName}?w=164&h=164&fit=crop&auto=format`}
                         srcSet={`http://localhost:3030/api/${category}/${id}/image/${n.saveName}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
