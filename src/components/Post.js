@@ -11,28 +11,128 @@ import {
 } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const PostContent = () => {
   const [categoryState, setCategoryState] = useState("");
-  let category = "";
   const [subjectState, setSubjectState] = useState("");
-  let subject = "";
   const [contentState, setContentState] = useState("");
-  let content = "";
   const [startDateState, setStartDateState] = useState(null);
-  let startDate = "";
   const [finaldateState, setFinalDateState] = useState(null);
-  let finalDate = "";
   const [imageUrl, setImageUrl] = useState([]);
+  const [filesState, setFilesState] = useState([]);
   let files = [];
+  const navigate = useNavigate();
 
+  //이미지 올리기(게시물 올린 뒤에 실행)
+  const postImage = async (id, formdata) => {
+    try {
+      await axios({
+        method: "POST",
+        url: `http://localhost:3030/api/${categoryState}/upload/multi/${id}`,
+        headers: {
+          Authorization: window.localStorage.getItem("accessToken"),
+          "Content-Type": "multipart/form-data",
+        },
+        data: formdata,
+      }).then((res) => {
+        if (res.data.token) {
+          window.localStorage.setItem("accessToken", res.data.token);
+          axios({
+            method: "POST",
+            url: `http://localhost:3030/api/${categoryState}/upload/multi/${id}`,
+            headers: {
+              Authorization: window.localStorage.getItem("accessToken"),
+              "Content-Type": "multipart/form-data",
+            },
+            data: formdata,
+          });
+        }
+        return res;
+      });
+      navigate(-1);
+    } catch (error) {
+      if (
+        error.response.data.code === 419 ||
+        error.response.data.code === 401
+      ) {
+        alert("로그인이 필요한 서비스입니다.");
+        navigate("/login");
+      } else {
+        alert("사진 제출 오류!(게시물은 제출 되었습니다.)");
+      }
+    }
+  };
+
+  //게시물 올리기
+  const postContent = async (data, formdata) => {
+    try {
+      const Id = await axios({
+        method: "POST",
+        url: `http://localhost:3030/api/${categoryState}/`,
+        headers: {
+          Authorization: window.localStorage.getItem("accessToken"),
+        },
+        data: data,
+      }).then((res) => {
+        if (res.data.token) {
+          window.localStorage.setItem("accessToken", res.data.token);
+          axios({
+            method: "POST",
+            url: `http://localhost:3030/api/${categoryState}/`,
+            headers: {
+              Authorization: window.localStorage.getItem("accessToken"),
+            },
+            data: data,
+          });
+        }
+        return res.data.contentId;
+      });
+      postImage(Id[Object.keys(Id)[0]], formdata);
+    } catch (error) {
+      if (
+        error.response.code === 419 ||
+        error.response.code === 401
+      ) {
+        alert("로그인이 필요한 서비스입니다.");
+        navigate("/login");
+      } else {
+        alert("제출 오류!");
+      }
+    }
+  };
+
+  const handleSubmit = (e) => {
+    const data = {
+      subject: subjectState,
+      content: contentState,
+      writer: window.localStorage.getItem("userName"),
+      writer_nick: null,
+      startdate: startDateState,
+      finaldate: finaldateState,
+      password: null,
+    };
+    const formdata = new FormData();
+    for (let i = 0; i < filesState.length; i++) {
+      formdata.append("img", filesState[i]);
+    }
+    const sure = window.confirm("제출 하시겠습니까?");
+    if (sure) {
+      postContent(data, formdata);
+    } else {
+      return;
+    }
+  };
+  //날짜 컨버터
   const Dateconvert = (str) => {
     var date = new Date(str),
       mnth = ("0" + (date.getMonth() + 1)).slice(-2),
       day = ("0" + date.getDate()).slice(-2);
     return [date.getFullYear(), mnth, day].join("-");
   };
+  //사진 인코더
   const encodeFileToBase64 = (file) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -45,32 +145,22 @@ const PostContent = () => {
   };
   const handleChangeSelect = (e) => {
     setCategoryState(e.target.value);
-    category = e.target.value;
-    console.log(category);
   };
   const handleChangeSubject = (e) => {
     setSubjectState(e.target.value);
-    subject = e.target.value;
-    console.log(subject);
   };
   const handleChangeContent = (e) => {
     setContentState(e.target.value);
-    content = e.target.value;
-    console.log(content);
   };
   const handleChangeStartDate = (e) => {
     setStartDateState(Dateconvert(e));
-    startDate = Dateconvert(e);
-    console.log(startDate);
   };
   const handleChangeFinalDate = (e) => {
     setFinalDateState(Dateconvert(e));
-    finalDate = Dateconvert(e);
-    console.log(finalDate);
   };
   const handleChangeFiles = (e) => {
+    setFilesState(e.target.files);
     files = e.target.files;
-    console.log(files);
     for (let i = 0; i < files.length; i++) {
       encodeFileToBase64(files[i]);
     }
@@ -145,7 +235,7 @@ const PostContent = () => {
             </Button>
           </Grid>
           <Grid item xs={9}>
-            <Button variant="contained" fullWidth>
+            <Button variant="contained" fullWidth onClick={handleSubmit}>
               제출
             </Button>
           </Grid>

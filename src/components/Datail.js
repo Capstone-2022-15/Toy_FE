@@ -1,6 +1,5 @@
 import {
   Button,
-  Divider,
   Grid,
   ImageList,
   ImageListItem,
@@ -94,31 +93,6 @@ const ShowDetail = ({ id, category }) => {
       }
     }
   };
-  //댓글 작성 버튼
-  const handlePostComments = (e) => {
-    const name = window.localStorage.getItem("userName");
-    const data = { member_id: name, content: content };
-    getPostComments(data);
-  };
-  //댓글 입력창
-  const handleChangeInput = (e) => {
-    content = e.target.value;
-  };
-  //댓글 삭제 버튼
-  const handleClickDelete = (e) => {
-    const sure = window.confirm("정말로 삭제 하시겠습니까?");
-    if (sure) {
-      const idx = e.target.id;
-      console.log(idx);
-      deleteComment(idx);
-    }
-  };
-  //이미지 클릭
-  const handleClickImage = (e) => {
-    navigate(`/${category}/${id}/image/`, {
-      state: e.target.currentSrc
-    });
-  };
   //댓글 삭제
   const deleteComment = async (idx) => {
     try {
@@ -190,6 +164,74 @@ const ShowDetail = ({ id, category }) => {
         alert("데이터 불러오기 오류!");
       }
     }
+  };
+  //게시물 삭제
+  const deleteThis = async (id, category) => {
+    try {
+      await axios({
+        method: "DELETE",
+        url: `http://localhost:3030/api/${category}/${id}`,
+        headers: {
+          Authorization: window.localStorage.getItem("accessToken"),
+        },
+      }).then((res) => {
+        if (res.data.token) {
+          window.localStorage.setItem("accessToken", res.data.token);
+          axios({
+            method: "DELETE",
+            url: `http://localhost:3030/api/${category}/${id}`,
+            headers: {
+              Authorization: window.localStorage.getItem("accessToken"),
+            },
+          });
+        }
+        return res.data;
+      });
+      navigate(-1);
+    } catch (error) {
+      if (
+        error.response.data.code === 419 ||
+        error.response.data.code === 401
+      ) {
+        alert("로그인이 필요한 서비스입니다.");
+        navigate("/login");
+      } else {
+        alert("삭제 오류!");
+      }
+    }
+  };
+
+  //게시물 삭제 버튼
+  const handleDelete = (e) => {
+    const sure = window.confirm("정말로 삭제 하시겠습니까?");
+    if (sure) {
+      deleteThis(id, category);
+    }
+  };
+  //댓글 작성 버튼
+  const handlePostComments = (e) => {
+    const name = window.localStorage.getItem("userName");
+    const data = { member_id: name, content: content };
+    getPostComments(data);
+  };
+  //댓글 입력창
+  const handleChangeInput = (e) => {
+    content = e.target.value;
+  };
+  //댓글 삭제 버튼
+  const handleClickDelete = (e) => {
+    const sure = window.confirm("정말로 삭제 하시겠습니까?");
+    if (sure) {
+      const idx = e.target.id;
+      console.log(idx);
+      deleteComment(idx);
+    }
+  };
+  //이미지 클릭
+  const handleClickImage = (e) => {
+    navigate(`/${category}/${id}/image/`, {
+      state: e.target.currentSrc,
+    });
   };
   useEffect(() => {
     getBoard();
@@ -264,7 +306,7 @@ const ShowDetail = ({ id, category }) => {
             </Box>
           </Grid>
           <Grid item xs={12} sx={{ p: 2, bgcolor: "text.main" }}>
-            <ImageList cols={5} rowHeight={400}>
+            <ImageList cols={5} rowHeight={100}>
               {images &&
                 images.map((n) => (
                   <ImageListItem key={n.idx}>
@@ -345,6 +387,18 @@ const ShowDetail = ({ id, category }) => {
                 ))}
             </List>
           </Grid>
+          {board.writer === window.localStorage.getItem("userName") ? (
+            <Grid item xs={12} sx={{ p: 1, bgcolor: "background.paper" }}>
+              <Button
+                fullWidth
+                variant="contained"
+                color="error"
+                onClick={handleDelete}
+              >
+                게시물 삭제
+              </Button>
+            </Grid>
+          ) : null}
         </Grid>
       )}
     </div>
